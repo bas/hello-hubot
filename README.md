@@ -40,77 +40,23 @@ npm install eslint --save-dev
 ### Build Docker container 
 
 ```
-docker build --rm -f "Dockerfile" -t basp/hello-actions:latest .
+docker build --rm -f "Dockerfile" -t hello-hubot .
 ```
 
 ### Run Docker container
 
 ```
-docker run -d -p 8080:8080 --name hello-actions basp/hello-actions:latest
+docker run -d -p 8080:8080 --name hello-hubot hello-hubot:latest
 ```
 
 ### Stop container
 
 ```
-docker container stop hello-actions
+docker container stop hello-hubot
 ```
 
 ### Remove container
 
 ```
-docker container rm hello-actions
-```
-
-### Push to Docker Hub
-
-```
-docker push basp/hello-actions:latest
-```
-
-## Example workflow
-
-```hcl
-workflow "Build, Test and Publish" {
-  on = "push"
-  resolves = [
-    "Publish",
-    "Zeit Deploy",
-    "ESLint",
-  ]
-}
-
-action "Build" {
-  uses = "actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680"
-  args = "install"
-}
-
-action "Test" {
-  uses = "actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680"
-  args = "test"
-  needs = ["Build"]
-}
-
-action "Master" {
-  uses = "actions/bin/filter@d820d56839906464fb7a57d1b4e1741cf5183efa"
-  needs = ["Zeit Deploy"]
-  args = "branch master"
-}
-
-action "Publish" {
-  uses = "actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680"
-  needs = ["Master"]
-  args = "publish --dry-run"
-}
-
-action "Zeit Deploy" {
-  uses = "actions/zeit-now@666edee2f3632660e9829cb6801ee5b7d47b303d"
-  needs = ["Test", "ESLint"]
-  secrets = ["ZEIT_TOKEN"]
-}
-
-action "ESLint" {
-  uses = "actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680"
-  needs = ["Build"]
-  runs = "./node_modules/.bin/eslint --no-eslintrc ."
-}
+docker container rm hello-hubot
 ```
